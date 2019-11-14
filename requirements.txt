@@ -1,2 +1,3 @@
 flask
-Flask_SocketIO
+Flask-SocketIO
+eventlet
