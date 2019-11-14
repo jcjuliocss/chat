@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		socket = io.connect('http://127.0.0.1:5000')
+
+		socket.on('connect', function() {
+			socket.send("Usuario conectado!")
+		})
+
+		socket.on('message', function(msg) {
+			li = document.createElement("li")
+			txt_node = document.createTextNode(msg)
+			li.appendChild(txt_node)
+			document.getElementById("msgs").appendChild(li)
+		})
+
+		function enviar_mensagem(){
+			texto_mensagem = document.getElementById("mensagem")
+			texto_nome = document.getElementById("nome")
+			socket.send(texto_nome.value + " diz: " + texto_mensagem.value)
+			texto_mensagem.value = ''
+		}
+	</script>
+</head>
+<body>
+	<ul id="msgs"></ul>
+	<input type="text" name="nome" placeholder="nome" id="nome"><br>
+	<textarea maxlength="200" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem"></textarea><br>
+	<button id="enviar" onclick="enviar_mensagem()">Enviar</button>
+</body>
+</html>
