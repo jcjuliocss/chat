@@ -22,8 +22,7 @@ def mensagem_recebida():
 def handle_message(json):
     """."""
     print('Mensagem recebida: ' + str(json))
-    socketio.emit('message', json, broadcast=True,
-                  callback=mensagem_recebida)
+    socketio.emit('message', json, callback=mensagem_recebida)
 
 
 if __name__ == '__main__':
