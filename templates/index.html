@@ -12,28 +12,28 @@
 					data: 'Usuário conectado.'
 				})
 			})
-		});
 
-		socket.on('message', function(msg) {
-			li = document.createElement("li")
-			if(typeof msg.nome == 'undefined'){
-				txt_node = document.createTextNode(msg.data)
-			}else{
-				txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
-			}
-			li.appendChild(txt_node)
-			document.getElementById("msgs").appendChild(li)
-		})
-
-		function enviar_mensagem(){
-			texto_mensagem = document.getElementById("mensagem")
-			texto_nome = document.getElementById("nome")
-			socket.emit( 'my event', {
-				nome: texto_nome.value,
-				texto: texto_mensagem.value
+			socket.on('message', function(msg) {
+				li = document.createElement("li")
+				if(typeof msg.nome == 'undefined'){
+					txt_node = document.createTextNode(msg.data)
+				}else{
+					txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
+				}
+				li.appendChild(txt_node)
+				document.getElementById("msgs").appendChild(li)
 			})
-			texto_mensagem.value = ''
-		}
+
+			function enviar_mensagem(){
+				texto_mensagem = document.getElementById("mensagem")
+				texto_nome = document.getElementById("nome")
+				socket.emit( 'my event', {
+					nome: texto_nome.value,
+					texto: texto_mensagem.value
+				})
+				texto_mensagem.value = ''
+			}
+		});
 
 		function atualiza_tamanho(){
 			caracteres_restantes = document.getElementById("caracteres_restantes")
