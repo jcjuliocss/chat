@@ -6,12 +6,18 @@
 		socket = io.connect('https://chat-socketio-test.herokuapp.com/')
 
 		socket.on('connect', function() {
-			socket.send("Usuario conectado!")
+			socket.emit('my event', {
+				data: 'Usuário conectado.'
+			})
 		})
 
 		socket.on('message', function(msg) {
 			li = document.createElement("li")
-			txt_node = document.createTextNode(msg)
+			if(typeof msg.nome == 'undefined'){
+				txt_node = document.createTextNode(msg.data)
+			}else{
+				txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
+			}
 			li.appendChild(txt_node)
 			document.getElementById("msgs").appendChild(li)
 		})
@@ -19,15 +25,30 @@
 		function enviar_mensagem(){
 			texto_mensagem = document.getElementById("mensagem")
 			texto_nome = document.getElementById("nome")
-			socket.send(texto_nome.value + " diz: " + texto_mensagem.value)
+			socket.emit( 'my event', {
+				nome: texto_nome.value,
+				texto: texto_mensagem.value
+			})
 			texto_mensagem.value = ''
+		}
+
+		function atualiza_tamanho(){
+			caracteres_restantes = document.getElementById("caracteres_restantes")
+			limite = 300
+			tamanho_texto = document.getElementById("mensagem").value.length
+			console.log(tamanho_texto)
+			total_restantes = limite - tamanho_texto
+			caracteres_restantes.innerHTML = (total_restantes + " restantes").toString()
 		}
 	</script>
 </head>
 <body>
 	<ul id="msgs"></ul>
 	<input type="text" name="nome" placeholder="nome" id="nome"><br>
-	<textarea maxlength="200" rows="5" cols="20" name="mensagem" id="mensagem" placeholder="mensagem"></textarea><br>
-	<button id="enviar" onclick="enviar_mensagem()">Enviar</button>
+	<div style="width: 297px;">
+		<textarea maxlength="300" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem" onkeyup="atualiza_tamanho()" onkeydown="atualiza_tamanho()"></textarea><br>
+		<font size="2" style="float: right;"><span id="caracteres_restantes">300 restantes</span></font><br>
+	</div>
+	<button id="enviar" onclick="enviar_mensagem(); atualiza_tamanho()">Enviar</button>
 </body>
 </html>
