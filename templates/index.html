@@ -4,7 +4,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
-		socket = io.connect('https://chat-socketio-test.herokuapp.com/' ,{transports: ['websocket']})
+		socket = io.connect('https://chat-socketio-test.herokuapp.com/', {transports: ['websocket']})
 
 		socket.on('connect', function() {
 			socket.emit('my event', {
@@ -17,7 +17,7 @@
 			if(typeof msg.nome == 'undefined'){
 				txt_node = document.createTextNode(msg.data)
 			}else{
-				txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
+				txt_node = document.createTextNode(msg.horario + ' - ' + msg.nome + ' diz: ' + msg.texto)
 			}
 			li.appendChild(txt_node)
 			document.getElementById("msgs").appendChild(li)
