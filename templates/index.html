@@ -14,7 +14,7 @@
 
 		socket.on('message', function(msg) {
 			div = document.createElement("div")
-			div.setAttribute("style", "width: max-content; height: auto;")
+			div.setAttribute("style", "width: max-content; height: auto; max-width: 98%;")
 			li = document.createElement("li")
 			if(typeof msg.nome == 'undefined'){
 				txt_node = document.createTextNode(msg.data)
@@ -62,12 +62,16 @@
 	</script>
 </head>
 <body>
-	<ul id="msgs"></ul>
-	<input type="text" name="nome" placeholder="nome" id="nome"><br>
-	<div style="width: 297px;">
-		<textarea maxlength="300" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem" onkeyup="atualiza_tamanho(); testa_envio(event)" onkeydown="atualiza_tamanho()"></textarea><br>
-		<font size="2" style="float: right;"><span id="caracteres_restantes">300 restantes</span></font><br>
+	<div style="margin-left: 25vw;">
+		<div style="max-height: 70vh; max-width: 50vw; min-height: 70vh; min-width: 50vw; border: 1px solid; overflow-y: auto; overflow-x: hidden; word-wrap: anywhere;">
+			<ul id="msgs"></ul>
+		</div>
+		<div style="width: 50vw; border: 1px solid gray;">
+			<input type="text" name="nome" placeholder="nome" id="nome"><br>
+			<textarea maxlength="300" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem" onkeyup="atualiza_tamanho(); testa_envio(event)" onkeydown="atualiza_tamanho()"></textarea><br>
+			<font size="2" style="float: left;"><span id="caracteres_restantes">300 restantes</span></font><br>
+			<button id="enviar" onclick="enviar_mensagem(); atualiza_tamanho()">Enviar(Enter)</button>
+		</div>
 	</div>
-	<button id="enviar" onclick="enviar_mensagem(); atualiza_tamanho()">Enviar(Enter)</button>
 </body>
 </html>
