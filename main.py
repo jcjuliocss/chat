@@ -1,7 +1,7 @@
 """Docstring for main."""
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from datetime import datetime, timedelta
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -23,8 +23,9 @@ def mensagem_recebida():
 def handle_message(json):
     """."""
     print('Mensagem recebida: ' + str(json))
-    data = datetime.now() + timedelta()
-    json['horario'] = data.strftime('%H:%M')
+    hora = datetime.now().strftime('%H')
+    minutos = datetime.now().strftime('%M')
+    json['horario'] = str(int(hora) - 3) + ':' + minutos
     socketio.emit('message', json, callback=mensagem_recebida)
 
 
