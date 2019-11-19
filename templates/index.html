@@ -40,15 +40,22 @@
 			total_restantes = limite - tamanho_texto
 			caracteres_restantes.innerHTML = (total_restantes + " restantes").toString()
 		}
+
+		function testa_envio(e){
+			if (e.key == 'Enter') {
+				enviar_mensagem()
+				atualiza_tamanho()
+			}
+		}
 	</script>
 </head>
 <body>
 	<ul id="msgs"></ul>
 	<input type="text" name="nome" placeholder="nome" id="nome"><br>
 	<div style="width: 297px;">
-		<textarea maxlength="300" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem" onkeyup="atualiza_tamanho()" onkeydown="atualiza_tamanho()"></textarea><br>
+		<textarea maxlength="300" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem" onkeyup="atualiza_tamanho(); testa_envio(event)" onkeydown="atualiza_tamanho()"></textarea><br>
 		<font size="2" style="float: right;"><span id="caracteres_restantes">300 restantes</span></font><br>
 	</div>
-	<button id="enviar" onclick="enviar_mensagem(); atualiza_tamanho()">Enviar</button>
+	<button id="enviar" onclick="enviar_mensagem(); atualiza_tamanho()">Enviar(Enter)</button>
 </body>
 </html>
