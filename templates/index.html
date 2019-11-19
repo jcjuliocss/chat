@@ -13,14 +13,26 @@
 		})
 
 		socket.on('message', function(msg) {
+			div = document.createElement("div")
+			div.setAttribute("style", "width: max-content; height: auto;")
 			li = document.createElement("li")
 			if(typeof msg.nome == 'undefined'){
 				txt_node = document.createTextNode(msg.data)
 			}else{
-				txt_node = document.createTextNode(msg.horario + ' - ' + msg.nome + ' diz: ' + msg.texto)
+				txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
+				txt_hr_node = document.createTextNode(msg.horario)
+				span = document.createElement("span")
+				span.setAttribute("style", "float: right; font-size: 10px; color: gray;")
+				span.appendChild(txt_hr_node)
+				br = document.createElement("br")
 			}
 			li.appendChild(txt_node)
-			document.getElementById("msgs").appendChild(li)
+			div.appendChild(li)
+			if(typeof msg.nome != 'undefined'){
+				div.appendChild(span)
+				div.appendChild(br)
+			}
+			document.getElementById("msgs").appendChild(div)
 		})
 
 		function enviar_mensagem(){
