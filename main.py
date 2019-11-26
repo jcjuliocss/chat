@@ -25,7 +25,7 @@ def logar():
     return redirect("/index")
 
 
-@app.route('/index')
+@app.route('/index', methods=['GET'])
 def index():
     """."""
     return render_template('index.html', nome=session['nome'])
