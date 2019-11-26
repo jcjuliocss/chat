@@ -53,6 +53,7 @@ def handle_connect(json):
     json['nome'] = session['nome']
     json['texto'] = ' conectado.'
     print("Usuario conectado")
+    global usuarios_conectados
     usuarios_conectados.append(json['nome'])
     json['lista_usuarios'] = usuarios_conectados
     print(usuarios_conectados)
@@ -68,6 +69,7 @@ def handle_disconnect(json):
     json['nome'] = session['nome']
     json['texto'] = ' desconectado.'
     print("Usuario desconectado")
+    global usuarios_conectados
     usuarios_conectados.remove(json['nome'])
     json['lista_usuarios'] = usuarios_conectados
     print(usuarios_conectados)
