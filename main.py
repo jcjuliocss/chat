@@ -76,12 +76,5 @@ def handle_disconnect(json):
     socketio.emit('connection', json)
 
 
-@app.route("/socketio_link", methods=['GET'])
-def socketio_link():
-    """."""
-    return "https://cdnjs.cloudflare.com/ajax/libs/socket.io/\
-            2.3.0/socket.io.dev.js"
-
-
 if __name__ == '__main__':
     socketio.run(app)
