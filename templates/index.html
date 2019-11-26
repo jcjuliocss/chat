@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Chat SocketIo</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
-		socket = io.connect('https://chat-socketio-test.herokuapp.com/', {transports: ['websocket']})
+		socket = io()
 
 		socket.on('connect', function() {
 			socket.emit('my event', {
 				data: 'Usuário conectado.'
 			})
 		})
+
+		window.addEventListener("beforeunload", function(){
+			socket.emit('my event', {
+				data: 'Usuário desconectado.'
+			})
+		});
 
 		socket.on('message', function(msg) {
 			div = document.createElement("div")
@@ -42,6 +49,7 @@
 				nome: texto_nome.value,
 				texto: texto_mensagem.value
 			})
+			// atualiza_titulo(texto_nome.value + ' Diz: ' + texto_mensagem.value)
 			texto_mensagem.value = ''
 		}
 
@@ -58,6 +66,22 @@
 				enviar_mensagem()
 				atualiza_tamanho()
 			}
+		}
+
+		// function atualiza_titulo(titulo_novo){
+		// 	i = 1
+		// 	titulo_atual = 'Chat SocketIo'
+  //           loop = setInterval(function(){
+  //               document.title = titulo_novo
+  //               if(i % 2 == 0){
+  //                  document.title = titulo_atual
+  //               }
+  //               if(i == 50){
+  //               	clearInterval(loop)
+  //               }
+  //               i++;
+  //           }, 1000);
+
 		}
 	</script>
 </head>
