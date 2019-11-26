@@ -55,7 +55,7 @@ def handle_connect(json):
     print("Usuario conectado")
     usuarios_conectados.append(json['nome'])
     json['lista_usuarios'] = usuarios_conectados
-    print usuarios_conectados
+    print(usuarios_conectados)
     socketio.emit('connection', json)
 
 
@@ -70,6 +70,7 @@ def handle_disconnect(json):
     print("Usuario desconectado")
     usuarios_conectados.remove(json['nome'])
     json['lista_usuarios'] = usuarios_conectados
+    print(usuarios_conectados)
     socketio.emit('connection', json)
 
 
