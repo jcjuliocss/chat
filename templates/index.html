@@ -5,48 +5,68 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
-		socket = io('http://bug-chat.herokuapp.com/', {transports: ['websocket']})
+		socket = io('https://bug-chat.herokuapp.com/', {transports: ['websocket']})
 
 		socket.on('connect', function() {
-			socket.emit('my event', {
+			socket.emit('connect message', {
 				data: 'Usuário conectado.'
 			})
 		})
 
+		socket.on('connection', function(msg){
+			div = document.createElement("div")
+			div.setAttribute("style", "width: max-content; height: auto; max-width: 98%;")
+			li = document.createElement("li")
+			txt_node = document.createTextNode(msg.nome + msg.texto)
+			txt_hr_node = document.createTextNode(msg.horario)
+			span = document.createElement("span")
+			span.setAttribute("style", "float: right; font-size: 10px; color: gray;")
+			span.appendChild(txt_hr_node)
+			br = document.createElement("br")
+			li.appendChild(txt_node)
+			div.appendChild(li)
+			document.getElementById("msgs").appendChild(div)
+
+			atualiza_lista(msg.lista_usuarios)
+		})
+
 		window.addEventListener("beforeunload", function(){
-			socket.emit('my event', {
-				data: 'Usuário desconectado.'
+			socket.emit('disconnect message', {
+				data: 'Usuario desconectado.'
 			})
-		});
+		})
+
+		function atualiza_lista(lista){
+			document.getElementById("lista_conectados").innerHTML = ''
+			for(i=0;i<lista.length;i++){
+				linha = document.createElement("tr")
+				linha.setAttribute("usuario", lista[i])
+				coluna = document.createElement("td")
+				txt_coluna = document.createTextNode(lista[i])
+				coluna.appendChild(txt_coluna)
+				linha.appendChild(coluna)
+				document.getElementById("lista_conectados").appendChild(linha)
+			}
+		}
 
 		socket.on('message', function(msg) {
 			div = document.createElement("div")
 			div.setAttribute("style", "width: max-content; height: auto; max-width: 98%;")
 			li = document.createElement("li")
-			if(typeof msg.nome == 'undefined'){
-				txt_node = document.createTextNode(msg.data)
-			}else{
-				txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
-				txt_hr_node = document.createTextNode(msg.horario)
-				span = document.createElement("span")
-				span.setAttribute("style", "float: right; font-size: 10px; color: gray;")
-				span.appendChild(txt_hr_node)
-				br = document.createElement("br")
-			}
+			txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
+			txt_hr_node = document.createTextNode(msg.horario)
+			span = document.createElement("span")
+			span.setAttribute("style", "float: right; font-size: 10px; color: gray;")
+			span.appendChild(txt_hr_node)
+			br = document.createElement("br")
 			li.appendChild(txt_node)
 			div.appendChild(li)
-			if(typeof msg.nome != 'undefined'){
-				div.appendChild(span)
-				div.appendChild(br)
-			}
 			document.getElementById("msgs").appendChild(div)
 		})
 
 		function enviar_mensagem(){
 			texto_mensagem = document.getElementById("mensagem")
-			texto_nome = document.getElementById("nome")
-			socket.emit( 'my event', {
-				nome: texto_nome.value,
+			socket.emit( 'send message', {
 				texto: texto_mensagem.value
 			})
 			// atualiza_titulo(texto_nome.value + ' Diz: ' + texto_mensagem.value)
@@ -86,12 +106,14 @@
 	</script>
 </head>
 <body>
+	<span>Usu&aacute;rios conectados</span>
+	<table style="border: 1px solid; position: absolute;" id="lista_conectados">
+	</table>
 	<div style="margin-left: 25vw;">
 		<div style="max-height: 70vh; max-width: 50vw; min-height: 70vh; min-width: 50vw; border: 1px solid; overflow-y: auto; overflow-x: hidden; word-wrap: anywhere;">
 			<ul id="msgs"></ul>
 		</div>
 		<div style="width: 50vw; border: 1px solid gray;">
-			<input type="text" name="nome" placeholder="nome" id="nome"><br>
 			<textarea maxlength="300" rows="5" cols="40" name="mensagem" id="mensagem" placeholder="mensagem" onkeyup="atualiza_tamanho(); testa_envio(event)" onkeydown="atualiza_tamanho()"></textarea><br>
 			<font size="2" style="float: left;"><span id="caracteres_restantes">300 restantes</span></font><br>
 			<button id="enviar" onclick="enviar_mensagem(); atualiza_tamanho()">Enviar(Enter)</button>
