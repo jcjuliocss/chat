@@ -55,6 +55,7 @@ def handle_connect(json):
     print("Usuario conectado")
     usuarios_conectados.append(json['nome'])
     json['lista_usuarios'] = usuarios_conectados
+    print usuarios_conectados
     socketio.emit('connection', json)
 
 
