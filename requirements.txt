@@ -1,4 +1,5 @@
 flask
 Flask-SocketIO
+flask_sslify
 eventlet
 gunicorn

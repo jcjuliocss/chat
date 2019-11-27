@@ -1,10 +1,12 @@
 """Docstring for main."""
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO
+from flask_sslify import SSLify
 from datetime import datetime
 from Usuario import Usuario
 
 app = Flask(__name__)
+sslify = SSLify(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
