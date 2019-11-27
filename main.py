@@ -2,12 +2,13 @@
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO
 from datetime import datetime
+from Usuario import Usuario
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-usuarios_conectados = []
+usuarios = Usuario()
 
 
 @app.route("/")
@@ -41,7 +42,7 @@ def handle_message(json):
     if 'texto' in json and len(json['texto']) > 300:
         json['texto'] = json['texto'][:300]
     print('Mensagem recebida: ' + str(json))
-    socketio.emit('message', json, broadcast=True)
+    socketio.emit('message', json)
 
 
 @socketio.on('connect message')
@@ -53,11 +54,11 @@ def handle_connect(json):
     json['nome'] = session['nome']
     json['texto'] = ' conectado.'
     print("Usuario conectado")
-    usuarios_conectados.append(json['nome'])
-    print(id(usuarios_conectados))
-    json['lista_usuarios'] = usuarios_conectados
-    print(usuarios_conectados)
-    socketio.emit('connection', json, broadcast=True)
+    usuarios.insere_usuario(json['nome'])
+    print(id(usuarios.lista_usuarios))
+    json['lista_usuarios'] = usuarios.lista_usuarios
+    print(usuarios.lista_usuarios)
+    socketio.emit('connection', json)
 
 
 @socketio.on('disconnect message')
@@ -69,11 +70,11 @@ def handle_disconnect(json):
     json['nome'] = session['nome']
     json['texto'] = ' desconectado.'
     print("Usuario desconectado")
-    usuarios_conectados.remove(json['nome'])
-    print(id(usuarios_conectados))
-    json['lista_usuarios'] = usuarios_conectados
-    print(usuarios_conectados)
-    socketio.emit('connection', json, broadcast=True)
+    usuarios.remove_usuario(json['nome'])
+    print(id(usuarios.lista_usuarios))
+    json['lista_usuarios'] = usuarios.lista_usuarios
+    print(usuarios.lista_usuarios)
+    socketio.emit('connection', json)
 
 
 if __name__ == '__main__':
