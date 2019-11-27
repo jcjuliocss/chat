@@ -41,7 +41,7 @@ def handle_message(json):
     if 'texto' in json and len(json['texto']) > 300:
         json['texto'] = json['texto'][:300]
     print('Mensagem recebida: ' + str(json))
-    socketio.emit('message', json)
+    socketio.emit('message', json, broadcast=True)
 
 
 @socketio.on('connect message')
@@ -57,7 +57,7 @@ def handle_connect(json):
     print(id(usuarios_conectados))
     json['lista_usuarios'] = usuarios_conectados
     print(usuarios_conectados)
-    socketio.emit('connection', json)
+    socketio.emit('connection', json, broadcast=True)
 
 
 @socketio.on('disconnect message')
@@ -73,7 +73,7 @@ def handle_disconnect(json):
     print(id(usuarios_conectados))
     json['lista_usuarios'] = usuarios_conectados
     print(usuarios_conectados)
-    socketio.emit('connection', json)
+    socketio.emit('connection', json, broadcast=True)
 
 
 if __name__ == '__main__':
