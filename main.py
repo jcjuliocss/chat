@@ -1,25 +1,26 @@
 """Docstring for main."""
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO
-# from flask_sslify import SSLify
+from flask_sslify import SSLify
 from datetime import datetime
 import psycopg2
 
 app = Flask(__name__)
-# sslify = SSLify(app)
+sslify = SSLify(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
 def conectar():
         """."""
+        p = 'f58a406d6ec66146ad5701f458108c0c35c1997dcbc7826eb7fb75161c2a9257'
         conn = \
             psycopg2.connect(
-                user="postgres",
-                password='admin',
-                host="127.0.0.1",
+                user="bwciolhujcnndr",
+                password=p,
+                host="ec2-174-129-238-192.compute-1.amazonaws.com",
                 port="5432",
-                database="faculdade")
+                database="d6n4gbdm74cfr6")
 
         return conn
 
