@@ -123,7 +123,7 @@ def handle_disconnect(json):
     q = cursor.fetchall()
     m = monta_retorno(q, usuarios)
     json['lista_usuarios'] = m
-    session.pop('nome')
+    del(session['nome'])
     socketio.emit('connection', json)
 
 
