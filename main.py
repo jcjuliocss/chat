@@ -125,6 +125,7 @@ def handle_disconnect(json):
     json['lista_usuarios'] = m
     del(session['nome'])
     socketio.emit('connection', json)
+    return redirect('/')
 
 
 def deleta_usuario(nome):
