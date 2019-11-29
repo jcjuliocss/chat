@@ -5,7 +5,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
-		socket = io('https://bug-chat.herokuapp.com/', {transports: ['websocket']})
+		socket = io('127.0.0.1:5000', {transports: ['websocket']})
 
 		socket.on('connect', function() {
 			socket.emit('connect message', {
@@ -42,9 +42,9 @@
 			document.getElementById("lista_conectados").innerHTML = ''
 			for(i=0;i<lista.length;i++){
 				linha = document.createElement("tr")
-				linha.setAttribute("usuario", lista[i])
+				linha.setAttribute("usuario", lista[i]['nome'])
 				coluna = document.createElement("td")
-				txt_coluna = document.createTextNode(lista[i])
+				txt_coluna = document.createTextNode(lista[i]['nome'])
 				coluna.appendChild(txt_coluna)
 				linha.appendChild(coluna)
 				document.getElementById("lista_conectados").appendChild(linha)

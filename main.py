@@ -1,16 +1,42 @@
 """Docstring for main."""
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO
-from flask_sslify import SSLify
+# from flask_sslify import SSLify
 from datetime import datetime
-from Usuario import Usuario
+import psycopg2
 
 app = Flask(__name__)
-sslify = SSLify(app)
+# sslify = SSLify(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-usuarios = Usuario()
+
+def conectar():
+        """."""
+        conn = \
+            psycopg2.connect(
+                user="postgres",
+                password='admin',
+                host="127.0.0.1",
+                port="5432",
+                database="faculdade")
+
+        return conn
+
+
+def monta_retorno(colunas, valores):
+        """."""
+        retorno = []
+        for i in range(len(valores)):
+            dict = {}
+            for j in range(len(colunas)):
+                dict[colunas[j][0]] = valores[i][j]
+            retorno.append(dict)
+
+        return retorno
+
+conn = conectar()
+cursor = conn.cursor()
 
 
 @app.route("/")
@@ -24,6 +50,11 @@ def logar():
     """."""
     dados = request.form
     session['nome'] = dados.get("login")
+
+    query = "INSERT INTO usuarios_temp(nome) " \
+            + "VALUES('%s');" % (session['nome'])
+    cursor.execute(query)
+    conn.commit()
 
     return redirect("/index")
 
@@ -58,10 +89,16 @@ def handle_connect(json):
     json['nome'] = session['nome']
     json['texto'] = ' conectado.'
     print("Usuario conectado")
-    usuarios.insere_usuario(json['nome'])
-    print(id(usuarios.lista_usuarios))
-    json['lista_usuarios'] = usuarios.lista_usuarios
-    print(usuarios.lista_usuarios)
+    query = 'select column_name from ' +\
+            'information_schema.columns where table_name ' +\
+            '= \'' + 'usuarios_temp' + '\';'
+
+    cursor.execute(query)
+    q = cursor.fetchall()
+    cursor.execute("SELECT * FROM usuarios_temp;")
+    usuarios = cursor.fetchall()
+    m = monta_retorno(q, usuarios)
+    json['lista_usuarios'] = m
     socketio.emit('connection', json)
 
 
@@ -74,11 +111,26 @@ def handle_disconnect(json):
     json['nome'] = session['nome']
     json['texto'] = ' desconectado.'
     print("Usuario desconectado")
-    usuarios.remove_usuario(json['nome'])
-    print(id(usuarios.lista_usuarios))
-    json['lista_usuarios'] = usuarios.lista_usuarios
-    print(usuarios.lista_usuarios)
+    deleta_usuario(json['nome'])
+    cursor.execute("SELECT * FROM usuarios_temp;")
+    usuarios = cursor.fetchall()
+    query = 'select column_name from ' +\
+            'information_schema.columns where table_name ' +\
+            '= \'' + 'usuarios_temp' + '\';'
+
+    cursor.execute(query)
+    q = cursor.fetchall()
+    m = monta_retorno(q, usuarios)
+    json['lista_usuarios'] = m
+    session.pop('nome')
     socketio.emit('connection', json)
+
+
+def deleta_usuario(nome):
+    """."""
+    query = "DELETE FROM usuarios_temp WHERE nome = '%s';" % (nome)
+    cursor.execute(query)
+    conn.commit()
 
 
 if __name__ == '__main__':
