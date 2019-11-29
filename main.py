@@ -43,8 +43,6 @@ cursor = conn.cursor()
 @app.route("/")
 def login():
     """."""
-    cursor.execute("CREATE TABLE usuarios_temp(nome varchar);")
-    conn.commit()
     return render_template("login.html")
 
 
