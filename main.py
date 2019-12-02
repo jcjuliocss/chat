@@ -1,12 +1,12 @@
 """Docstring for main."""
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO
-from flask_sslify import SSLify
+# from flask_sslify import SSLify
 from datetime import datetime
 import psycopg2
 
 app = Flask(__name__)
-sslify = SSLify(app)
+# sslify = SSLify(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
@@ -21,6 +21,13 @@ def conectar():
                 host="ec2-174-129-238-192.compute-1.amazonaws.com",
                 port="5432",
                 database="d6n4gbdm74cfr6")
+        # conn = \
+        #     psycopg2.connect(
+        #         user="postgres",
+        #         password='admin',
+        #         host="127.0.0.1",
+        #         port="5432",
+        #         database="faculdade")
 
         return conn
 
@@ -63,7 +70,20 @@ def logar():
 @app.route('/index', methods=['GET'])
 def index():
     """."""
-    if 'nome' not in session:
+    query = 'select column_name from ' +\
+            'information_schema.columns where table_name ' +\
+            '= \'' + 'usuarios_temp' + '\';'
+
+    cursor.execute(query)
+    q = cursor.fetchall()
+    cursor.execute("SELECT * FROM usuarios_temp;")
+    usuarios = cursor.fetchall()
+    m = monta_retorno(q, usuarios)
+    lista_nomes = []
+    for i in m:
+        lista_nomes.append(i['nome'])
+    print lista_nomes
+    if session['nome'] not in lista_nomes:
         return redirect('/')
     return render_template('index.html', nome=session['nome'])
 
@@ -125,7 +145,7 @@ def handle_disconnect(json):
     json['lista_usuarios'] = m
     del(session['nome'])
     socketio.emit('connection', json)
-    index()
+    return redirect("/")
 
 
 def deleta_usuario(nome):
