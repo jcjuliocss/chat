@@ -82,7 +82,6 @@ def index():
     lista_nomes = []
     for i in m:
         lista_nomes.append(i['nome'])
-    print lista_nomes
     if session['nome'] not in lista_nomes:
         return redirect('/')
     return render_template('index.html', nome=session['nome'])
