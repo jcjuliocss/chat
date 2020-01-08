@@ -14,11 +14,13 @@
 		})
 
 		socket.on('connection', function(msg){
+			now = new Date
+
 			div = document.createElement("div")
 			div.setAttribute("style", "width: max-content; height: auto; max-width: 98%;")
 			li = document.createElement("li")
 			txt_node = document.createTextNode(msg.nome + msg.texto)
-			txt_hr_node = document.createTextNode(msg.horario)
+			txt_hr_node = document.createTextNode(now.getHours() + ":" + now.getMinutes())
 			span = document.createElement("span")
 			span.setAttribute("style", "float: right; font-size: 10px; color: gray;")
 			span.appendChild(txt_hr_node)
@@ -56,7 +58,7 @@
 			div.setAttribute("style", "width: max-content; height: auto; max-width: 98%;")
 			li = document.createElement("li")
 			txt_node = document.createTextNode(msg.nome + ' diz: ' + msg.texto)
-			txt_hr_node = document.createTextNode(msg.horario)
+			txt_hr_node = document.createTextNode(now.getHours() + ":" + now.getMinutes())
 			span = document.createElement("span")
 			span.setAttribute("style", "float: right; font-size: 10px; color: gray;")
 			span.appendChild(txt_hr_node)
